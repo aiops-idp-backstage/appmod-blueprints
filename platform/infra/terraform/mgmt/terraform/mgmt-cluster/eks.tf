@@ -93,27 +93,6 @@ module "eks" {
     enabled    = true
   }
 
-  # Modify Security Groups to Allow NLB Traffic
-  cluster_security_group_additional_rules = {
-    ingress_from_nlb_80 = {
-      description = "Allow inbound traffic from NLB on port 80"
-      protocol    = "tcp"
-      from_port   = 80
-      to_port     = 80
-      type        = "ingress"
-      source_security_group_id = aws_security_group.node_sg.id  # Attach Load Balancer SG
-    }
-
-    ingress_from_nlb_443 = {
-      description = "Allow inbound traffic from NLB on port 443"
-      protocol    = "tcp"
-      from_port   = 443
-      to_port     = 443
-      type        = "ingress"
-      source_security_group_id = aws_security_group.node_sg.id  # Attach Load Balancer SG
-    }
-  }
-
   cluster_addons = {
     eks-pod-identity-agent = {}
     kube-proxy             = {}
@@ -125,13 +104,15 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  tags = merge(local.tags, {
+  node_security_group_tags = merge(local.tags, { # Now only add it to the node security groups.
     # NOTE - if creating multiple security groups with this module, only tag the
     # security group that Karpenter should utilize with the following tag
     # (i.e. - at most, only one security group should have this tag in your account)
     "eks.amazonaws.com/discovery" = local.name
   })
-  }
+  tags = local.tags # Now everything you create you can attach the generic ones you don't use for discovering.
+}
+
 
 output "configure_kubectl" {
   description = "Configure kubectl: make sure you're logged in with the correct AWS profile and run the following command to update your kubeconfig"
