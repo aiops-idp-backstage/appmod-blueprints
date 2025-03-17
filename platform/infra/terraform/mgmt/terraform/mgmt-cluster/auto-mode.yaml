@@ -13,7 +13,6 @@ spec:
   securityGroupSelectorTerms:
     - tags:
         eks.amazonaws.com/discovery: modern-engineering
-  
   tags:
     eks.amazonaws.com/discovery: modern-engineering
 ---
