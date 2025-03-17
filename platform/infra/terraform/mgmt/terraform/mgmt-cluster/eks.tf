@@ -1,78 +1,4 @@
 ################################################################################
-# Security Groups
-################################################################################
-
-resource "aws_security_group" "lb_sg" {
-  name        = "${local.name}-lb-sg"
-  description = "Security group for the ALB"
-  vpc_id      = module.vpc.vpc_id  # Ensure this references the correct VPC
-
-  # Allow inbound traffic for HTTP (80) and HTTPS (443) from all sources
-  ingress {
-    description = "Allow HTTPS traffic from anywhere"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]  # Open to all IPv4 addresses
-  }
-
-  ingress {
-    description = "Allow HTTP traffic from anywhere"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  # Allow all outbound traffic
-  egress {
-    description = "Allow all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "${local.name}-lb-sg"
-  }
-}
-
-resource "aws_security_group" "node_sg" {
-  name        = "${local.name}-node-sg"
-  description = "Security group for EC2 nodes in EKS Auto Mode"
-  vpc_id      = module.vpc.vpc_id
-
-  # Allow inbound traffic from the ALB security group on ports 80 and 443
-  ingress {
-    description     = "Allow HTTPS from ALB"
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-  }
-
-  ingress {
-    description     = "Allow HTTP from ALB"
-    from_port       = 80
-    to_port         = 80
-    protocol        = "tcp"
-  }
-
-  # Allow all outbound traffic
-  egress {
-    description = "Allow all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = "${local.name}-node-sg"
-  }
-}
-
-################################################################################
 # Cluster
 ################################################################################
 
@@ -134,8 +60,8 @@ resource "kubernetes_storage_class" "ebs-gp3-sc" {
   reclaim_policy      = "Delete"
 
   parameters = {
-    type      = "gp3"     # Required: Specify volume type # Is this fine?-------------------------------------------------------------------------------------------------------------------
-    encrypted = "true"    # Required: EKS Auto Mode provisions encrypted volumes # Is this fine?-------------------------------------------------------------------------------------------------------------------
+    type      = "gp3"
+    encrypted = "true"
   }
 }
 
