@@ -29,8 +29,9 @@ resource "kubectl_manifest" "application_argocd_ack" {
   )
 
   provisioner "local-exec" {
-    command = "kubectl wait --for=jsonpath=.status.health.status=Healthy -n argocd application/ack --timeout=300s &&  kubectl wait --for=jsonpath=.status.sync.status=Synced --timeout=300s -n argocd application/ack"
+    command = "./install.sh"
 
+    working_dir = "${path.module}/scripts/ack"
     interpreter = ["/bin/bash", "-c"]
   }
 }
