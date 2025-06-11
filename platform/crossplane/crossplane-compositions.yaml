@@ -10,7 +10,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/aws-samples/appmod-blueprints
+    repoURL: https://github.com/aiops-idp-backstage/appmod-blueprints
     targetRevision: HEAD
     path: "platform/crossplane/compositions"
     directory:
