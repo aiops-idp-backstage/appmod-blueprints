@@ -111,8 +111,12 @@ data:
         - allow: [Component, System, API, Resource, Location, Template]
       locations:
         # Examples from a public GitHub repository.
+        # - type: url
+        #   target: https://${DOMAIN_NAME}/gitea/giteaAdmin/platform/src/branch/main/backstage/templates/catalog-info.yaml
+        #   rules:
+        #     - allow: [User, Group]
         - type: url
-          target: https://${DOMAIN_NAME}/gitea/giteaAdmin/platform/src/branch/main/backstage/templates/catalog-info.yaml
+          target: https://github.com/aiops-idp-backstage/appmod-blueprints/blob/main/platform/backstage/templates/catalog-info.yaml
           rules:
             - allow: [User, Group]
         ## Uncomment these lines to add an example org
